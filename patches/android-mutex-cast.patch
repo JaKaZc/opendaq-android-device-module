@@ -1,0 +1,16 @@
+diff --git a/core/coreobjects/include/coreobjects/property_object_impl.h b/core/coreobjects/include/coreobjects/property_object_impl.h
+index 8b302b94..113f9574 100644
+--- a/core/coreobjects/include/coreobjects/property_object_impl.h
++++ b/core/coreobjects/include/coreobjects/property_object_impl.h
+@@ -2789,7 +2789,10 @@ std::mutex* GenericPropertyObjectImpl<PropObjInterface, Interfaces...>::getLocal
+         DAQ_THROW_EXCEPTION(daq::InvalidStateException, "Can't acquire local mutex if locking strategy is set to inherit");
+     }
+ 
+-    MutexImpl* mutexImpl = dynamic_cast<MutexImpl*>(this->sync.getObject());
++    // static_cast: Android's libc++ compares type_info by address, and each
++    // library carries its own copy of MutexImpl's, so a dynamic_cast from a
++    // module returns null. sync always holds a MutexImpl.
++    MutexImpl* mutexImpl = static_cast<MutexImpl*>(this->sync.getObject());
+     return &mutexImpl->mutex;
+ }
+ 
