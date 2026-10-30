@@ -321,7 +321,7 @@ The first run takes about ten minutes. Later runs only rebuild what changed.
 | Variable | Default | Meaning |
 |---|---|---|
 | `OPENDAQ_SOURCE` | `https://github.com/openDAQ/openDAQ.git` | Where to clone the SDK from; a local clone is faster |
-| `SDK_REF` | `v3.40.3` | The SDK release |
+| `OPENDAQ_VERSION` | the file `OPENDAQ_VERSION`, `3.40.3` | The openDAQ SDK release. Change it in the file; the variable overrides it for one build |
 | `ANDROID_NDK` | the newest NDK in the Android SDK | The NDK |
 | `CMAKE`, `NINJA` | `cmake`, `ninja` | The tools, when they are not on the PATH |
 

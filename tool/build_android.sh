@@ -1,7 +1,8 @@
 #!/bin/sh
 # Build AndroidDeviceModule for Android arm64 into dist/android-arm64/:
 #
-#   1. the openDAQ SDK at SDK_REF, with the patch in patches/, cloned into
+#   1. the openDAQ SDK at the release in the file OPENDAQ_VERSION, with the
+#      patch in patches/, cloned into
 #      build/openDAQ from OPENDAQ_SOURCE (the openDAQ repository on GitHub
 #      unless set; a local clone is faster),
 #   2. the module, against that SDK.
@@ -24,7 +25,8 @@ HERE="$(cd "$(dirname "$0")/.." && pwd)"
 WORK="$HERE/build"
 DIST="$HERE/dist/android-arm64"
 SDK_SOURCE="${OPENDAQ_SOURCE:-https://github.com/openDAQ/openDAQ.git}"
-SDK_REF="${SDK_REF:-v3.40.3}"
+OPENDAQ_VERSION="${OPENDAQ_VERSION:-$(tr -d ' \r\n' < "$HERE/OPENDAQ_VERSION")}"
+SDK_REF="${SDK_REF:-v$OPENDAQ_VERSION}"
 CMAKE="${CMAKE:-cmake}"
 NINJA="${NINJA:-ninja}"
 
