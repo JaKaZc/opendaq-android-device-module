@@ -24,26 +24,32 @@ and the app's openDAQ server makes the device reachable. The
 
 ## The openDAQ phone projects
 
-This repository is one of four that work together. Clone them side by side
-into one folder, because the build scripts find each other there.
+This repository is one of four that work together, but each one stands on
+its own: take only the parts you need, and build your own around them.
+"Needs" says what a repository cannot do without.
 
 | Repository | What it is | Needs |
 |---|---|---|
-| **opendaq-android-device-module** (this one) | openDAQ module, **Android only**: the phone's sensors as one device, `android://` | openDAQ SDK, Android NDK |
-| opendaq-universal-function-blocks | openDAQ module, UniversalFunctionBlocksModule: Universal renderer, Level, Spectrum, Vibration, Sound level meter and Dashboard | openDAQ SDK |
-| opendaq-device-server | Android app that serves the phone as an openDAQ device on the network | both modules, Android 8 or newer, arm64 |
-| opendaq-studio-desktop | openDAQ Studio, the desktop client for macOS and Windows | the function blocks module |
+| **opendaq-android-device-module** (this one) | openDAQ module, **Android only**: the phone's sensors and state as one device, `android://` | The openDAQ SDK and the Android NDK |
+| [opendaq-universal-function-blocks](https://github.com/JaKaZc/opendaq-universal-function-blocks) | openDAQ module, UniversalFunctionBlocksModule: Universal renderer, Level, Spectrum, Vibration, Sound level meter and Dashboard, for any platform | The openDAQ SDK |
+| [opendaq-device-server](https://github.com/JaKaZc/opendaq-device-server) | Android app that serves the phone as an openDAQ device on the network | The Android device module. The function blocks module is optional |
+| [opendaq-studio-desktop](https://github.com/JaKaZc/opendaq-studio-desktop) | openDAQ Studio, the desktop client for macOS and Windows, for any openDAQ device | Nothing else. The function blocks module is optional |
 
 ```
  Android phone: opendaq-device-server                 Computer: opendaq-studio-desktop
  ┌──────────────────────────────────────────┐         ┌──────────────────────────────────────────┐
  │ openDAQ instance                         │         │ openDAQ Studio                           │
  │  android:// device  <- this module       │   TCP   │  openDAQ instance, native client         │
- │  function blocks    <- universal         │   7420  │  UniversalFunctionBlocksModule, so       │
- │                        function blocks   │ ──────▶ │  the phone's blocks can be set up        │
+ │  function blocks    <- universal         │   7420  │  UniversalFunctionBlocksModule,          │
+ │                        function blocks   │ ──────▶ │  optional, to add the blocks here too    │
  │  native streaming server, mDNS           │         │  NTP time server, UDP 12300              │
  └──────────────────────────────────────────┘         └──────────────────────────────────────────┘
 ```
+
+None of the other repositories is needed to build or use the module. The
+Device Server is one app that hosts it, the function blocks are optional,
+and openDAQ Studio is one client of many; see
+[Using the phone from other projects](#using-the-phone-from-other-projects).
 
 All four are built against the same openDAQ SDK release, **v3.40.3**.
 openDAQ's native protocol does not connect a client of one release to a server
@@ -297,6 +303,8 @@ as 32-bit ARM or the x86_64 emulator images, are not built.
 ## Building
 
 ```bash
+git clone https://github.com/JaKaZc/opendaq-android-device-module.git
+cd opendaq-android-device-module
 tool/build_android.sh
 ```
 
@@ -330,7 +338,8 @@ it.
 ### Using the module in an app
 
 An app builds the module from these sources against its own SDK build, as the
-Device Server's `tool/build_native.sh` does, and then:
+Device Server's `tool/build_native.sh`
+([opendaq-device-server](https://github.com/JaKaZc/opendaq-device-server)) does, and then:
 
 1. packs `libandroid_device_module.module.so` with the SDK's libraries in its
    `jniLibs/arm64-v8a`, uncompressed, so openDAQ can load it by name,
